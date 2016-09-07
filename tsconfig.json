@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "amd",
+    "removeComments": false,
+    "noEmitOnError": true,
+    "declaration": true,
+    "sourceMap": false,
+    "preserveConstEnums": true,
+    "target": "es5",
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noImplicitAny": false
+  },
+  "files": [
+    "lib/references.d.ts"
+  ]
+}

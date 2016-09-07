@@ -1,0 +1,1 @@
+/// <reference path="./definitions/custom/external-interfaces.d.ts" />
