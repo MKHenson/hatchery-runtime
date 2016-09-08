@@ -4,6 +4,8 @@ var uglify = require('gulp-uglify');
 var merge = require('merge-stream');
 var ts = require('gulp-typescript');
 var fs = require('fs');
+var tslint = require("gulp-tslint");
+
 
 // Read the contents of the tsconfig file so we dont have to specify the files twice
 var tsConfig = JSON.parse(fs.readFileSync('tsconfig.json'));
@@ -41,9 +43,22 @@ gulp.task('ts-code', function() {
             "target": tsConfig.compilerOptions.target,
             "noImplicitAny": tsConfig.compilerOptions.noImplicitAny,
             "allowUnreachableCode": tsConfig.compilerOptions.allowUnreachableCode,
-            "allowUnusedLabels": tsConfig.compilerOptions.allowUnusedLabels
+            "allowUnusedLabels": tsConfig.compilerOptions.allowUnusedLabels,
+            "out": tsConfig.compilerOptions.outFile
             }))
-        .pipe(gulp.dest(outDir + '/js'));
+        .pipe(gulp.dest(outDir));
+});
+
+/**
+ * Ensures the code quality is up to scratch
+ */
+gulp.task("tslint", ['ts-code'], function() {
+    gulp.src(tsFiles)
+        .pipe( tslint({
+            configuration: "tslint.json",
+            formatter: "verbose"
+        }))
+        .pipe( tslint.report() )
 });
 
 /**
@@ -98,4 +113,4 @@ gulp.task( 'ts-code-declaration', function() {
 // });
 
 
-gulp.task('build', ['ts-code', 'ts-code-declaration'] );
+gulp.task('build', ['tslint', 'ts-code-declaration'] );
