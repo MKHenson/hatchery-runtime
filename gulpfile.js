@@ -67,7 +67,10 @@ gulp.task("tslint", ['ts-code'], function() {
 gulp.task( 'ts-code-declaration', function() {
 
     let requiredDeclarationFiles = gulp.src([
-        "./lib/definitions/custom/external-interfaces.d.ts"
+        "./lib/definitions/custom/external-interfaces.d.ts",
+        "./lib/definitions/IRuntimeItem.d.ts",
+        "./lib/definitions/IPlugin.d.ts",
+        "./lib/definitions/IFactories.d.ts"
     ], { base : "lib/definitions/custom"});
 
     let tsDefinition = gulp.src(tsFiles, { base: "." })

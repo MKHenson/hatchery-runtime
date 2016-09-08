@@ -175,6 +175,104 @@ declare namespace HatcheryRuntime {
 		data: {};
 	}
 }
+declare module HatcheryRuntime {
+
+    /**
+     * A common interface for links and behaviours
+     */
+    export interface IRuntimeItem {
+        /**
+        * Called when we enter a frame
+        * @param {number} totalTime The total time from the start of the application
+        * @param {number} delta The time between frames
+        */
+        onFrame( totalTime: number, delta: number );
+
+        /**
+        * Cleans up the object for garbage collection
+        */
+        dispose();
+
+        /**
+        * Notify if the item is disposed
+        */
+        disposed: boolean;
+    }
+}
+
+declare module HatcheryRuntime {
+
+    /**
+     * Describes a plugin interface which plugin writers can implement to interact with the runtime
+     */
+    export interface IPlugin {
+
+        /**
+        * Called when we enter a frame
+        * @param {number} totalTime The total time from the start of the application
+        * @param {number} delta The time between frames
+        */
+        onFrame(totalTime: number, delta: number);
+
+        /**
+        * Called whenever we enter a container
+        * @param {Container} container The container we are entering
+        */
+        onContainerEnter(container : Container );
+
+        /**
+        * Called whenever a container makes progress in its loading
+        * @param {Container} container The container thats being loaded
+        * @param {number} percentage The percentage of the loading processs
+        */
+        onLoadProgress(container: Container, percentage: number);
+
+
+        /**
+        * Called when a container is exited. The container might still be active.
+        * @param {Container} container The container we are entering
+        * @param {Portal} portal The portal used
+        * @param {any} stillActive Is this container still running.
+        */
+        onContainerExit(container: Container, portal: Portal, stillActive: boolean);
+
+        /**
+        * Cleans up the plugin
+        */
+        dispose();
+    }
+}
+declare module HatcheryRuntime {
+
+    /**
+     * This factory is used to create Animate behaviour objects
+     */
+    export interface IBehaviourFactory {
+
+        /**
+         * Creates a new behaviour
+         * @param {any} data The data object which defines what to create
+         * @param {Runtime} runtime The runtime we are adding this behaviour to
+         * @returns {Behaviour} The Behaviour we have created
+         */
+        create( data: any, runtime: Runtime ): Behaviour;
+    }
+
+    /**
+     * This factory is used to create Animate asset objects
+     */
+    export interface IAssetFactory {
+
+        /**
+        * Creates a new Asset
+        * @param {any} data The data object which defines what to create
+        * @param {Runtime} runtime The runtime we are adding this behaviour to
+        * @returns {Asset} The {Asset} we have created
+        */
+        create(data: any, runtime: Runtime): Asset;
+    }
+}
+
 declare namespace HatcheryRuntime {
     type TypedCallback<T extends string, Y> = (type: T, event: Event<T> | Y, sender?: EventDispatcher) => void;
     /**
@@ -477,17 +575,17 @@ declare namespace HatcheryRuntime {
      */
     class Container extends Behaviour {
         name: string;
-        behaviours: Array<Behaviour>;
-        assets: Array<Asset>;
-        groups: Array<Group>;
+        behaviours: Behaviour[];
+        assets: Asset[];
+        groups: Group[];
+        activeInstances: Behaviour[];
         properties: any;
         plugins: any;
         loaded: boolean;
-        activeInstances: Array<Behaviour>;
+        unloadOnExit: boolean;
+        startOnLoad: boolean;
         private mNumLoaded;
         private mNumToLoad;
-        startOnLoad: boolean;
-        unloadOnExit: boolean;
         private isLoading;
         private portalsToExecute;
         constructor(runtime: Runtime);
