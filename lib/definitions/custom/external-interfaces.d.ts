@@ -1,4 +1,32 @@
-declare module HatcheryRuntime {
+declare namespace HatcheryRuntime {
+
+    export namespace Events {
+
+        export interface IAssetEvent { asset : Asset }
+        export interface IContainerEvent { container : Container }
+        export interface IMessageEvent { message : string }
+        export interface IRuntimeEvent { container : Container, percentage: number }
+
+        /**
+         * Describes asset related events
+         */
+        type AssetEvents = 'asset-loaded';
+
+        /**
+         * Describes container related events
+         */
+        type ContainerEvents = 'container-loaded';
+
+        /**
+         * Describes events sent by the messenger
+         */
+        type MessengerEvents = 'on-message';
+
+        /**
+         * Describes events sent by the runtime
+         */
+        type RuntimeEvents = 'load-progress';
+    }
 
     /**
      * Describes a portal's function
@@ -11,13 +39,19 @@ declare module HatcheryRuntime {
     export type ItemType = 'behaviour' | 'link' | 'asset' | 'shortcut' | 'portal' | 'script' | 'comment' | 'instance';
 
     /**
+     * Describes the types of objects we can interact with from a scene
+     */
+    export type DataType = 'asset' | 'number' | 'group' | 'file' | 'string' | 'any' | 'bool' | 'int' | 'color' | 'enum' | 'hidden';
+
+    /**
      * A basic wrapper for a Portal interface
      */
     export interface IPortal {
         name: string;
         type: PortalType;
         custom: boolean;
-        property: any;
+        valueType: DataType;
+        value: any;
         left?: number;
         top?: number;
     }
@@ -33,8 +67,8 @@ declare module HatcheryRuntime {
     }
 
     /**
-    * A basic wrapper for a Link interface
-    */
+     * A basic wrapper for a Link interface
+     */
     export interface ILinkItem extends ICanvasItem {
         frameDelay: number;
         startPortal: string;
@@ -44,17 +78,17 @@ declare module HatcheryRuntime {
     }
 
     /**
-    * A basic wrapper for a Behaviour interface
-    */
+     * A basic wrapper for a Behaviour interface
+     */
     export interface IBehaviour extends ICanvasItem {
         alias: string;
         behaviourType: string;
-        portals?: Array<IPortal>;
+        portals: IPortal[];
     }
 
     /**
-    * A basic wrapper for a Comment interface
-    */
+     * A basic wrapper for a Comment interface
+     */
     export interface IComment extends ICanvasItem {
         label: string;
         width : number;
@@ -62,31 +96,82 @@ declare module HatcheryRuntime {
     }
 
     /**
-    * A basic wrapper for a BehaviourPortal interface
-    */
+     * A basic wrapper for a BehaviourPortal interface
+     */
     export interface IBehaviourPortal extends IBehaviour {
         portal: IPortal;
     }
 
     /**
-    * A basic wrapper for a BehaviourComment interface
-    */
+     * A basic wrapper for a BehaviourComment interface
+     */
     export interface IBehaviourComment extends IBehaviour {
         width: number;
         height: number;
     }
 
     /**
-    * A basic wrapper for a BehaviourScript interface
-    */
+     * A basic wrapper for a BehaviourScript interface
+     */
     export interface IBehaviourScript extends IBehaviour {
         scriptId: string;
     }
 
     /**
-    * A basic wrapper for a BehaviourShortcut interface
-    */
+     * A basic wrapper for a BehaviourShortcut interface
+     */
     export interface IBehaviourShortcut extends IBehaviour {
         originalId: number;
     }
+
+    /**
+     * A basic wrapper for a behaviour instances
+     */
+    export interface IBehaviourInstance extends IBehaviour {
+        containerId: number;
+    }
+
+    /**
+     * An interface to describe the container behaviour structure
+     */
+    export interface IContainer extends IBehaviour {
+        name: string;
+		behaviours: IBehaviour[];
+		links: ILinkItem[];
+		assets: number[];
+		groups: number[];
+		properties: {};
+		plugins: {};
+    }
+
+    /**
+     * Describes a runtime asset
+     */
+	export interface IAsset {
+		name: string;
+		shallowId: number;
+		properties: { [name: string]: any };
+		className: string;
+		assets: number[];
+	}
+
+    /**
+     * Describes a runtime group
+     */
+    export interface IGroup {
+        name: string;
+		shallowId: number;
+        items: number[];
+	}
+
+    /**
+     * Describes a runtime scene
+     */
+	export interface IScene {
+		assets: IAsset[];
+		groups: IGroup[];
+		containers: IContainer[];
+		converters: {};
+		data: {};
+	}
 }

@@ -9,9 +9,23 @@
     "target": "es5",
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "outFile": "runtime.js"
   },
   "files": [
-    "lib/references.d.ts"
+    "lib/references.d.ts",
+    "lib/event-dispatcher.ts",
+    "lib/behaviour.ts",
+    "lib/link.ts",
+    "lib/portal.ts",
+    "lib/asset.ts",
+    "lib/group.ts",
+    "lib/behaviour-factory.ts",
+    "lib/container.ts",
+    "lib/instance-behaviour.ts",
+    "lib/asset-behaviour.ts",
+    "lib/messenger.ts",
+    "lib/runtime.ts",
+    "lib/loader.ts"
   ]
 }
