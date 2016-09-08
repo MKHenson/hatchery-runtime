@@ -36,7 +36,7 @@ declare namespace HatcheryRuntime {
     /**
      * Describes the item type
      */
-    export type ItemType = 'behaviour' | 'link' | 'asset' | 'shortcut' | 'portal' | 'script' | 'comment' | 'instance';
+    export type ItemType = 'behaviour' | 'link' | 'asset' | 'portal' | 'script' | 'instance';
 
     /**
      * Describes the types of objects we can interact with from a scene
